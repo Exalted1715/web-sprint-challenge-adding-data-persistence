@@ -1,16 +1,16 @@
-// build your server here and require it from index.js
-const express = require("express")
-const projectRouter = require("./project/router")
-const resourceRouter = require("./resource/router")
-const server = express()
+// server.js
 
-server.use(express.json())
+const express = require('express');
+const projectRouter = require('./project/router'); // Import project router
+const resourceRouter = require('./resource/router'); // Import resource router
+const taskRouter = require('./task/router'); // Import task router
 
+const server = express();
+server.use(express.json());
 
+// Use routers
+server.use('/api/projects', projectRouter);
+server.use('/api/resources', resourceRouter);
+server.use('/api/tasks', taskRouter);
 
-server.use('/api/project', projectRouter)
-server.use('/api/resource', resourceRouter)
-
-
-
-module.exports = server
+module.exports = server;
