@@ -1,28 +1,36 @@
-// build your `/api/projects` router here
-const projectRouter = require('express').Router();
+// project/router.js
 
-// Middleware function to log a message
-function loggerMiddleware(req, res, next) {
-    console.log('Middleware executed!');
-    next(); // Call next to pass control to the next middleware or route handler
+const express = require('express');
+const router = express.Router();
+const projectModel = require('./model');
+
+// Middleware function
+function customMiddleware(req, res, next) {
+  // Your middleware logic here
+  next(); // Call next to pass control to the next middleware or route handler
 }
 
-projectRouter.use(loggerMiddleware); // Use the loggerMiddleware for all routes
-
-// Route to handle all requests
-projectRouter.use('*', (req, res) => {
-    res.status(500).json({
-        api: 'up and running'
-    });
+// Route handler for GET /api/projects
+router.get('/', customMiddleware, async (req, res) => {
+  try {
+    const projects = await projectModel.getProjects();
+    res.json(projects);
+  } catch (error) {
+    console.error('Error getting projects:', error);
+    res.status(500).json({ message: 'Error getting projects' });
+  }
 });
 
-// Error handling middleware
-projectRouter.use((err, req, res, next) => { //eslint-disable-line
-    res.status(500).json({
-        customMessage: "Something went wrong inside the project projectRouter",
-        message: err.message,
-        stack: err.stack,
-    });
+// Route handler for POST /api/projects
+router.post('/', customMiddleware, async (req, res) => {
+  try {
+    const { project_name, project_description, project_completed } = req.body;
+    const newProject = await projectModel.addProject({ project_name, project_description, project_completed });
+    res.status(201).json(newProject);
+  } catch (error) {
+    console.error('Error adding project:', error);
+    res.status(500).json({ message: 'Error adding project' });
+  }
 });
 
-module.exports = projectRouter;
+module.exports = router;
