@@ -8,15 +8,18 @@ const resourceModel = require('./model');
 router.post('/', async (req, res) => {
   try {
     const { resource_name, resource_description } = req.body;
-    
-    // Add the new resource to the database
-    const newResourceId = await resourceModel.addResource({ resource_name, resource_description });
 
-    // Fetch the inserted resource from the database using its ID
-    const insertedResource = await resourceModel.getResourceById(newResourceId);
+    // Create a new resource
+    const newResource = await resourceModel.addResource({ 
+      resource_name, 
+      resource_description
+    });
 
-    // Respond with the newly created resource
-    res.status(201).json(insertedResource);
+    // Log the new resource to see what is being returned
+    console.log('New resource:', newResource);
+
+    // Return the newly created resource as response
+    res.status(201).json(newResource);
   } catch (error) {
     console.error('Error adding resource:', error);
     res.status(500).json({ message: 'Error adding resource' });
