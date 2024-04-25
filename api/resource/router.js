@@ -29,7 +29,10 @@ router.post('/', async (req, res) => {
 // GET /api/resources
 router.get('/', async (req, res) => {
   try {
+    // Get all resources from the database
     const resources = await resourceModel.getResources();
+
+    // Return the resources as response
     res.json(resources);
   } catch (error) {
     console.error('Error getting resources:', error);
