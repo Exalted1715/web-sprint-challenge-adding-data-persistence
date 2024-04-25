@@ -10,13 +10,23 @@ router.post('/', async (req, res) => {
     // Map the boolean value to the corresponding integer value (0 or 1)
     const completed = task_completed === true || task_completed === '1' ? 1 : 0;
 
-    const newTask = await taskModel.addTask({ 
-      task_description, 
-      task_notes, 
+    // Check if task_notes is empty and set it to null if it is
+    const notes = task_notes ? task_notes : null;
+
+    const newTaskData = { 
       task_completed: completed, 
+      task_description, 
+      task_notes: notes, // Set task_notes to null if it's empty
       project_id 
-    });
+    };
+
+    const [taskId] = await taskModel.addTask(newTaskData);
     
+    const newTask = { task_id: taskId, ...newTaskData }; // Combine task_id with other data
+
+    // Convert task_completed to a boolean before sending the response
+    newTask.task_completed = !!newTask.task_completed;
+
     res.status(201).json(newTask); // Return the newly created task
   } catch (error) {
     console.error('Error adding task:', error);
