@@ -2,7 +2,7 @@
 const knex = require('../../data/dbConfig.js');
 
 function addResource(resource) {
-  return knex('resources').insert(resource).returning('resource_id');
+  return knex('resources').insert(resource).returning('resource_name');
 }
 
 function getResourceById(resourceId) {

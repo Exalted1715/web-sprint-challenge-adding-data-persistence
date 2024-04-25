@@ -1,5 +1,3 @@
-// resource/router.js
-
 const express = require('express');
 const router = express.Router();
 const resourceModel = require('./model');
@@ -19,7 +17,7 @@ router.post('/', async (req, res) => {
     console.log('New resource:', newResource);
 
     // Return the newly created resource as response
-    res.status(201).json(newResource);
+    res.status(201).json(newResource[0]); // Return the first (and only) element of the array
   } catch (error) {
     console.error('Error adding resource:', error);
     res.status(500).json({ message: 'Error adding resource' });
