@@ -4,22 +4,18 @@ const express = require('express');
 const router = express.Router();
 const projectModel = require('./model');
 
-// POST /api/projects
 router.post('/', async (req, res) => {
   try {
-    
     const { project_name, project_description, project_completed } = req.body;
 
     // Map the boolean value to the corresponding integer value (0 or 1)
-  
+    const completed = project_completed === true || project_completed === '1' ? 1 : 0;
 
     const newProject = await projectModel.addProject({ 
       project_name, 
       project_description, 
-      project_completed, // Assign the integer value
+      project_completed: completed, // Assign the integer value
     });
-
- 
 
     res.status(201).json(newProject); // Return the newly created project
   } catch (error) {
@@ -27,6 +23,7 @@ router.post('/', async (req, res) => {
     res.status(500).json({ message: 'Error adding project' });
   }
 });
+
 
 
 
