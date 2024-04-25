@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
       task_completed: completed, 
       project_id 
     });
-
+    
     res.status(201).json(newTask); // Return the newly created task
   } catch (error) {
     console.error('Error adding task:', error);

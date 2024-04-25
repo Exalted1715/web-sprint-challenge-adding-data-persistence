@@ -9,7 +9,7 @@ router.post('/', async (req, res) => {
     const { project_name, project_description, project_completed } = req.body;
 
     // Map the boolean value to the corresponding integer value (0 or 1)
-    const completed = project_completed === true || project_completed === '1' ? 1 : 0;
+    const completed = !!project_completed; // Convert to boolean
 
     const newProject = await projectModel.addProject({ 
       project_name, 
@@ -17,12 +17,19 @@ router.post('/', async (req, res) => {
       project_completed: completed, // Assign the integer value
     });
 
-    res.status(201).json(newProject); // Return the newly created project
+    // Convert the project_completed value to boolean before sending the response
+    const responseProject = {
+      ...newProject,
+      project_completed: !!newProject.project_completed
+    };
+
+    res.status(201).json(responseProject); // Return the newly created project
   } catch (error) {
     console.error('Error adding project:', error);
     res.status(500).json({ message: 'Error adding project' });
   }
 });
+
 
 
 

@@ -1,5 +1,3 @@
-// project/model.js
-
 const knex = require('../../data/dbConfig.js');
 
 async function addProject(project) {
@@ -13,6 +11,9 @@ async function addProject(project) {
     // Retrieve the newly inserted project from the database using the correct primary key column name
     const newProject = await knex('projects').where({ project_id: projectId }).first();
 
+    // Convert project_completed to a boolean value
+    newProject.project_completed = newProject.project_completed === 1 || newProject.project_completed === true;
+
     // Log the newly retrieved project for debugging
     console.log('Newly retrieved project:', newProject);
 
@@ -22,6 +23,7 @@ async function addProject(project) {
     throw error; // Re-throw the error to handle it in the caller function
   }
 }
+
 
 
 function getProjects() {
